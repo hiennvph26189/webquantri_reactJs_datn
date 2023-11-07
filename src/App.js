@@ -1,25 +1,46 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import Nav from './component/Navigation/Nav';
+import React, { useEffect, useState } from "react";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {BrowserRouter as Router,} from "react-router-dom";
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
+  const [account, setaccount] = useState({});
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      setaccount(JSON.parse(session));
+    }
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hello world React with Hoi Dan IT
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+      <div className='app-header'>
+        <Nav />
+      </div>
+
+      <div className='app-container'>
+       <AppRoutes/>
+      </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
+
+    </Router>
+  )
 }
 
 export default App;
