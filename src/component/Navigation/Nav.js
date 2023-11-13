@@ -18,7 +18,7 @@ const Nav = (props) => {
             <NavLink  to='/' exact>HOME</NavLink>
             <NavLink to='/users'>Users</NavLink>
             <NavLink  to='/products'>Products</NavLink>
-            <NavLink  to='/about'>About</NavLink>
+            <NavLink  to='/category'>Category</NavLink>
         </div>
        } 
        
