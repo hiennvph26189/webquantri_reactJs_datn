@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react";
 import { fetchAllUser } from "../../services/userServices";
+import ReactPaginate from 'react-paginate';
 const Users = (props) => {
     const [listUser, setListUsers] = useState([]);
-
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLimit, setCurrentLimit] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
     useEffect(() => {
         fetchUsers();
-    }, [])
+    }, [currentPage])
 
     const fetchUsers = async () => {
-        let respone = await fetchAllUser();
+        let respone = await fetchAllUser(currentPage, currentLimit);
         console.log(respone.data)
         if (respone && respone.data && respone.data.EC === '0') {
-            setListUsers(respone.data.DT);
-
-            console.log(respone.data.DT)
+            setTotalPages(respone.data.DT.totalPages);
+            setListUsers(respone.data.DT.users);
         }
     }
+    const handlePageClick = async(event) => {
+        setCurrentPage(+event.selected +1 )
+        // await fetchUsers(+event.selected +1 );
+    };
 
     return (
         <div className="container">
@@ -57,29 +63,46 @@ const Users = (props) => {
                                                 <td>{item.phoneNumber}</td>
                                                 <td>{item.address}</td>
                                                 <td>{item.roleID}</td>
+                                                <td>
+                                                    <button className="btn btn-warning">Edit</button>
+                                                    <button className="btn btn-danger">Delete</button>
+                                                </td>
                                             </tr>
                                         )
 
                                     })}
                                 </>
                                 :
-                                <><span>Nots found user</span></>
+                                <><tr><td>Nots found user</td></tr></>
                             }
                         </tbody>
                     </table>
 
                 </div>
+                {totalPages > 0 &&
                 <div className="user-footer">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
+                    <ReactPaginate
+                        nextLabel="next >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={3}
+                        marginPagesDisplayed={2}
+                        pageCount={totalPages}
+                        previousLabel="< previous"
+                        pageClassName="page-item"
+                        pageLinkClassName="page-link"
+                        previousClassName="page-item"
+                        previousLinkClassName="page-link"
+                        nextClassName="page-item"
+                        nextLinkClassName="page-link"
+                        breakLabel="..."
+                        breakClassName="page-item"
+                        breakLinkClassName="page-link"
+                        containerClassName="pagination"
+                        activeClassName="active"
+                        renderOnZeroPageCount={null}
+                    />
                 </div>
+                }
             </div>
         </div>
     )

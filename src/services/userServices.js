@@ -10,9 +10,8 @@ const LoginUser = (ValueLogin, password) => {
         ValueLogin,password
     })
 }
-const fetchAllUser = () => {
-    return axios.get('http://localhost:8000/api/v1/user/list',{
-    })
+const fetchAllUser = (page, limit) => {
+    return axios.get(`http://localhost:8000/api/v1/user/list?page=${page}&limit=${limit}`);
 }
 
 export {registerNewUser, LoginUser, fetchAllUser};
