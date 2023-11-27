@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { fetchAllUser } from "../../services/userServices";
+import { fetchAllUser, deleteUser,addUser,updateUser } from "../../services/userServices";
+import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import ReactPaginate from 'react-paginate';
+import ModelUser from "./ModelUser";
+
 const Users = (props) => {
     const [listUser, setListUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit, setCurrentLimit] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
+    const [isShowModelUser, setisShowModelUser] = useState(false);
+
     useEffect(() => {
         fetchUsers();
     }, [currentPage])
@@ -23,7 +29,36 @@ const Users = (props) => {
         // await fetchUsers(+event.selected +1 );
     };
 
+    const handleDeleteUser = async(user) => {
+       Swal.fire({
+        title: "Are you sure?",
+        text: "Do you want delete user!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+             deleteUser(user);
+             fetchUsers();
+             toast.success("Delete success");
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+        }
+         
+      });
+       
+    }
+
+    const onHideCloseModelUser = () =>{
+        setisShowModelUser(false);
+    }
     return (
+        <>
         <div className="container">
             <div className="manage-users-container">
                 <div className="users-header">
@@ -32,7 +67,7 @@ const Users = (props) => {
                     </div>
                     <div className="actions">
                         <button className="btn btn-success">Refesh</button>
-                        <button className="btn btn-primary">Add New User</button>
+                        <button className="btn btn-primary" onClick={()=>setisShowModelUser(true)}>Add New User</button>
                     </div>
 
                 </div>
@@ -46,7 +81,6 @@ const Users = (props) => {
                                 <th scope="col">Email</th>
                                 <th scope="col">Phone Number</th>
                                 <th scope="col">AddRess</th>
-                                <th scope="col">Sex</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
@@ -62,10 +96,10 @@ const Users = (props) => {
                                                 <td>{item.email}</td>
                                                 <td>{item.phoneNumber}</td>
                                                 <td>{item.address}</td>
-                                                <td>{item.roleID}</td>
+                                               
                                                 <td>
-                                                    <button className="btn btn-warning">Edit</button>
-                                                    <button className="btn btn-danger">Delete</button>
+                                                    <button className="btn btn-warning mx-3">Edit</button>
+                                                    <button className="btn btn-danger mx-3" onClick={() => handleDeleteUser(item)}>Delete</button>
                                                 </td>
                                             </tr>
                                         )
@@ -105,6 +139,12 @@ const Users = (props) => {
                 }
             </div>
         </div>
+        <ModelUser
+        title = {"Create New User"}
+        onHide={onHideCloseModelUser}
+        show={isShowModelUser}
+        />
+        </>
     )
 }
 export default Users;

@@ -14,4 +14,14 @@ const fetchAllUser = (page, limit) => {
     return axios.get(`http://localhost:8000/api/v1/user/list?page=${page}&limit=${limit}`);
 }
 
-export {registerNewUser, LoginUser, fetchAllUser};
+const deleteUser = (user) => {
+    return axios.delete("http://localhost:8000/api/v1/user/delete",  {data: {id: user.id}})
+}
+const addUser = (userData) => {
+    return axios.post("http://localhost:8000/api/v1/user/add",  {...userData})
+}
+const updateUser = (user) => {
+    return axios.delete("http://localhost:8000/api/v1/user/edit",  {data: {id: user.id}})
+}
+
+export {registerNewUser, LoginUser, fetchAllUser, deleteUser,addUser,updateUser};
