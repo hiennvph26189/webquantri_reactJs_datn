@@ -34,7 +34,6 @@ class ThanhToan9Pay extends Component {
     }
     CallapiThanhToan = async() => {
         await axios.get(`${GET_THANH_TOAN}?page=${this.state.page}`).then((res) => {
-            console.log(res.data)
              if (res.errCode == 0) {
                   this.setState({
                     TongTrang : res.totalCount,
